@@ -12,9 +12,9 @@ partyButton.textContent = `Party Mode: Off`;
 shadingButton.textContent = `Shading Mode: Off`;
 
 document.body.appendChild(buttons);
-buttons.appendChild(resetButton);
 buttons.appendChild(partyButton);
 buttons.appendChild(shadingButton);
+buttons.appendChild(resetButton);
 document.body.appendChild(canvas);
 
 /** Mode switches */
@@ -50,22 +50,26 @@ const fillCanvas = sideNum => {
     canvas.appendChild(column);
     for (j = 0; j < sideNum; j++) {
       const row = document.createElement('div');
-      row.setAttribute('class', 'pixel');
+      const pixel = document.createElement('div');
+      row.setAttribute('class', 'row');
+      pixel.setAttribute('class', 'pixel')
 
-      /** if (shadingMode === true) {
-        row.style.backgroundColor = 'rgb(0,0,0,0)';
-      } */
+      if (shadingMode === true) {
+        pixel.style.backgroundColor = 'rgb(0,0,0,0.0)';
+      }
 
       row.addEventListener('mouseover', () => {
         if (partyMode === true) {
-          row.style.backgroundColor = randomColor();
+          pixel.style.backgroundColor = randomColor();
         } else if (shadingMode === true) {
-          row.style.opacity += 0.1;
+          let shade = window.getComputedStyle(row).getPropertyValue('opacity');
+          pixel.style.opacity = shade + 0.1;
         } else {
-          row.style.backgroundColor = 'black';
+          pixel.style.backgroundColor = 'black';
         }
       });
       document.getElementById(`column${i}`).appendChild(row);
+      row.appendChild(pixel);
     }
   }
 };

@@ -43,6 +43,12 @@ button {
   flex: 1;
   gap: 1px;
 }
+.row {
+  display: flex;
+  flex: 1;
+  background-color: white;
+}
+
 .pixel {
   flex: 1;
   background-color: white;
