@@ -17,6 +17,8 @@ buttons.appendChild(shadingButton);
 buttons.appendChild(resetButton);
 document.body.appendChild(canvas);
 
+let gridSize = 16;
+
 /** Mode switches */
 let partyMode = false;
 let shadingMode = false;
@@ -24,13 +26,16 @@ let shadingMode = false;
 /** Get user selection via button */
 resetButton.addEventListener('click', () => {
   const input = prompt(`Enter 1-100 to choose your canvas resolution.`);
-  if (Number.isInteger(Number(input)) === false) {
+  if (input === null) {
+    return
+  } else if (input === '' || Number.isInteger(Number(input)) === false) {
     alert(`Please enter an integer value.`);
   } else if (Number(input) < 1 || Number(input) > 100) {
     alert(`Please choose a number between 1 and 100.`);
   } else {
     clearCanvas();
-    fillCanvas(input);
+    gridSize = input;
+    fillCanvas(gridSize);
   }
 });
 
@@ -55,15 +60,17 @@ const fillCanvas = sideNum => {
       pixel.setAttribute('class', 'pixel')
 
       if (shadingMode === true) {
-        pixel.style.backgroundColor = 'rgb(0,0,0,0.0)';
+        pixel.style.backgroundColor = 'black'
+        pixel.style.opacity = 0;
       }
 
       row.addEventListener('mouseover', () => {
         if (partyMode === true) {
           pixel.style.backgroundColor = randomColor();
         } else if (shadingMode === true) {
-          let shade = window.getComputedStyle(row).getPropertyValue('opacity');
-          pixel.style.opacity = shade + 0.1;
+          if (pixel.style.opacity <= 0.9) {
+            pixel.style.opacity = +pixel.style.opacity + 0.1;
+          }
         } else {
           pixel.style.backgroundColor = 'black';
         }
@@ -76,7 +83,7 @@ const fillCanvas = sideNum => {
 
 /** Create default 16x16 canvas once the DOM is loaded */
 document.addEventListener('DOMContentLoaded', () => {
-  fillCanvas(16);
+  fillCanvas(gridSize);
 });
 
 /** Random color generator */
@@ -96,5 +103,20 @@ partyButton.addEventListener('click', () => {
     partyButton.textContent = `Party Mode: Off`;
   };
   clearCanvas();
-  fillCanvas(16);
+  fillCanvas(gridSize);
+});
+
+/** Toggle shading mode */
+shadingButton.addEventListener('click', () => {
+  if (shadingMode === false) {
+    partyMode = false;
+    shadingMode = true;
+    partyButton.textContent = `Party Mode: Off`;
+    shadingButton.textContent = `Shading Mode: On`;
+  } else {
+    shadingMode = false;
+    shadingButton.textContent = `Shading Mode: Off`;
+  };
+  clearCanvas();
+  fillCanvas(gridSize);
 });
